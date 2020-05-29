@@ -1,7 +1,10 @@
 package com.dpaksoni.assignment;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -49,7 +52,7 @@ public class FirstFragment extends Fragment {
     private String TAG = FirstFragment.class.getSimpleName();
 
     private static final int MSG_FETCH_DATA = 101;
-    private static final long DELAY_FETCH_DATA = 60 * 1000;
+    private static final long DELAY_FETCH_DATA = 10 * 1000;
     private static final int REQ_CODE_LOCATION_PERMISSION = 102;
 
     private TableView mCountryCountTableView;
@@ -59,6 +62,8 @@ public class FirstFragment extends Fragment {
     private TextView tvTotalRecovered;
     private CountryTableAdapter mCountryAdapter;
     private Context mContext;
+
+    private ProgressDialog mLoadingProgress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -135,8 +140,26 @@ public class FirstFragment extends Fragment {
             @Override
             public void onChanged(Resource<List<CountryCount>> listResource) {
                 switch (listResource.getStatus()) {
+                    case LOADING:
+                    {
+                        dismissLoadingProgress();
+
+                        mLoadingProgress = ProgressDialog.show(mContext, null, getString(R.string.loading_data), true, false);
+                    }
+                    break;
+
+                    case ERROR:
+                    {
+                        dismissLoadingProgress();
+
+                        String errormsg = listResource.getError();
+                        showErrorMessage(errormsg);
+                    }
+
                     case SUCCESS:
                     {
+                        dismissLoadingProgress();
+
                         List<CountryCount> listCountries = listResource.getData();
                         mCountViewModel.createRowHeaderList(listCountries.size());
 
@@ -263,6 +286,25 @@ public class FirstFragment extends Fragment {
             SharedPreferencesHelper prefHelper = new SharedPreferencesHelper(mContext, Constants.PREF);
             prefHelper.setString(Constants.KEY_COUNTRY, s);
 
+        }
+    }
+
+    private void showErrorMessage(String errormsg) {
+        AlertDialog dialog = new AlertDialog.Builder(mContext)
+                .setMessage(errormsg)
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .show();
+    }
+
+    private void dismissLoadingProgress() {
+        if(mLoadingProgress != null && mLoadingProgress.isShowing()) {
+            mLoadingProgress.dismiss();
+            mLoadingProgress = null;
         }
     }
 }

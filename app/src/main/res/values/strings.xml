@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DeepakAssignment</string>
+    <string name="app_name">Covid Counter</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -17,4 +17,6 @@
     <string name="some_error_occured">Some error occurred while loading counts</string>
     <string name="sort_ascending">Sort Ascending</string>
     <string name="sort_descending">Sort Descending</string>
+    <string name="ok">Ok</string>
+    <string name="loading_data">Loading data...</string>
 </resources>
