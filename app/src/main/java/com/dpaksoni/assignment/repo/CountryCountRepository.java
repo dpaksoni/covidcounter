@@ -71,10 +71,21 @@ public class CountryCountRepository {
                 }
                 else {
                     Log.d(TAG, "onResponse: isSuccessful: false");
-                    Resource<List<CountryCount>> errorResource = new Resource<>();
-                    errorResource.error(mContext.getString(R.string.some_error_occured));
+                    try {
+                        JSONObject fromCache = getJSONFromRaw();
+                        if(fromCache != null) {
+                            Gson gson = new Gson();
+                            List<CountryCount> listCountry
+                                    = gson.fromJson(fromCache.getJSONArray("Countries").toString(), new TypeToken< List<CountryCount> >(){}.getType());
 
-                    result.setValue(errorResource);
+                            Resource<List<CountryCount>> successResource = new Resource<>();
+                            successResource.success(listCountry);
+                            result.setValue(successResource);
+                        }
+                    }
+                    catch (Exception e) {
+
+                    }
                 }
             }
 

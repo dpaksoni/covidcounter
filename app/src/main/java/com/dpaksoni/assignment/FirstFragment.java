@@ -149,6 +149,8 @@ public class FirstFragment extends Fragment {
                             mCountryCountTableView.hideRow(0);
                             mCountryCountTableView.sortColumn(1, SortState.DESCENDING);
                             mCountryCountTableView.showRow(0);
+
+                            mCountryCountTableView.scrollToRowPosition(0);
                         }
                     }
                     break;
