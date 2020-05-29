@@ -2,11 +2,14 @@ package com.dpaksoni.assignment.tableview;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dpaksoni.assignment.Constants;
 import com.dpaksoni.assignment.R;
+import com.dpaksoni.assignment.SharedPreferencesHelper;
 import com.dpaksoni.assignment.models.CountryCount;
 import com.dpaksoni.assignment.tableview.holder.CellViewHolder;
 import com.dpaksoni.assignment.tableview.holder.ColumnHeaderViewHolder;
@@ -28,10 +31,12 @@ import java.util.List;
 public class CountryTableAdapter extends AbstractTableAdapter<ColumnHeaderModel, RowHeaderModel,
         CellModel> {
 
-    private CountViewModel myTableViewModel;
+    private SharedPreferencesHelper prefHelper;
 
     public CountryTableAdapter(Context p_jContext) {
         super(p_jContext);
+
+        prefHelper = new SharedPreferencesHelper(p_jContext, Constants.PREF);
     }
 
     @Override
@@ -48,7 +53,10 @@ public class CountryTableAdapter extends AbstractTableAdapter<ColumnHeaderModel,
         CellModel cell = (CellModel) p_jValue;
 
         ((CellViewHolder) holder).setCellModel(cell, p_nXPosition);
-        if(p_nYPosition == 0) {
+
+        String country = prefHelper.getString(Constants.KEY_COUNTRY, null);
+
+        if(!TextUtils.isEmpty(country) && p_nYPosition == 0) {
             ((CellViewHolder) holder).cell_textview.setTypeface(null, Typeface.BOLD);
         }
         else {
@@ -116,7 +124,6 @@ public class CountryTableAdapter extends AbstractTableAdapter<ColumnHeaderModel,
     public int getCellItemViewType(int position) {
         return 0;
     }
-
 
     /**
      * This method is not a generic Adapter method. It helps to generate lists from single user
