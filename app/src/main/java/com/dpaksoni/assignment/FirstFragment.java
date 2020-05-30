@@ -44,7 +44,7 @@ public class FirstFragment extends Fragment {
     private String TAG = FirstFragment.class.getSimpleName();
 
     private static final int MSG_FETCH_DATA = 101;
-    private static final long DELAY_FETCH_DATA = 10 * 1000;
+    private static final long DELAY_FETCH_DATA = 2 * 60 * 1000;
 
 
     private TableView mCountryCountTableView;
